@@ -147,7 +147,29 @@ for q in qs:
 
 ##### Evaluation
 #### Generate Misspellings
-test_queries = ['Apple Watch', 'Google Pixel', 'Microsoft Surface']
+def generate_misspelling(name):
+    company_terms = ['inc', 'co', 'ltd', 'limited', 'llc',]
+    name_lower = name.lower()
+    for term in company_terms:
+        if term in name_lower.split():
+            name = ' '.join(word for word in name.split() if word.lower() != term)
+            break
+    if len(name) < 3:
+        return name
+    error_count = random.randint(1, 3)
+    misspelled = name
+    for _ in range(error_count):
+        r = random.random()
+        if r < 0.15 and len(misspelled) > 4:
+            i, j = sorted(random.sample(range(len(misspelled)), 2))
+            if j - i > 1:
+                misspelled = misspelled[:i] + misspelled[j] + misspelled[i+1:j] + misspelled[i] + misspelled[j+1:]
+        # ... (other error types: omit, add, substitute, etc.)
+    return misspelled
+
+c_names = ['Apple Watch', 'Google Pixel', 'Microsoft Surface']
+test_queries = [(generate_misspelling(name), name) for name in c_names]
+
 def accuracy_at_k(model, index, test_queries, top_k, k_values=[1, 5, 10]):
     lv_results = {k: 0 for k in k_values}
     jw_results = {k: 0 for k in k_values}
