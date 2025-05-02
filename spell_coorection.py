@@ -50,6 +50,25 @@ model = fasttext.train_supervised(
 )
 model.quantize(qnorm=True)
 
+
+#### Training the model in unsupervised manner
+##### It does not require a separate train set preparation and it does not support quantization.
+# model = fasttext.train_unsupervised(
+#             input=output_file,
+#             model="skipgram",
+#             lr=1e-5,
+#             dim=300,
+#             ws=1,
+#             epoch=1000,
+#             minCount=1,
+#             minn=3,
+#             maxn=6,
+#             neg=5,
+#             wordNgrams=1,
+#             loss='ns'
+# )
+
+
 #### Save the model
 model.save_model("fasttext_product_model.bin")
 model = fasttext.load_model("fasttext_product_model.bin")
